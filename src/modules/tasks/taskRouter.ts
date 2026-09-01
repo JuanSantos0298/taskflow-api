@@ -15,6 +15,5 @@ taskRouter.put('/:id', (req, res) => {
     res.json({ message: `Tarea ${req.params.id} actualizada` })
 })
 
-taskRouter.delete('/:id', (req, res) => {
-    res.json({ message: `Tarea ${req.params.id} eliminada` })
-})
+//Actualización del endpoint delete
+taskRouter.delete('/:id', (req, res, next) => controller.delete(req, res, next))

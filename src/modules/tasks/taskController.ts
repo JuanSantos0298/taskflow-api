@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
+//Agregamos el modelo de Task (schema)
+import { TaskModel } from './taskModel.js'
 
+
+//Actualización de la información en la que pasamos de usar datos hardcodeados a obtenerlos de la conexión de la BBDD y el schema
 export class TaskController {
     async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            // Por ahora datos de prueba
-            const tasks = [
-                { id: '1', title: 'Tarea 1', isCompleted: false },
-                { id: '2', title: 'Tarea 2', isCompleted: true },
-            ]
+            const { userId } = req.query
+            const tasks = await TaskModel.find(userId ? { userId } : {})
             res.json({ status: 'ok', data: tasks })
         } catch (error) {
             next(error)
@@ -17,10 +18,17 @@ export class TaskController {
     async create(req: Request, res: Response, next: NextFunction) {
         try {
             const { title, description, userId } = req.body
-            res.status(201).json({
-                status: 'ok',
-                data: { id: Date.now().toString(), title, description, userId, isCompleted: false }
-            })
+            const task = await TaskModel.create({ title, description, userId })
+            res.status(201).json({ status: 'ok', data: task })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async delete(req: Request, res: Response, next: NextFunction) {
+        try {
+            await TaskModel.findByIdAndDelete(req.params.id)
+            res.json({ status: 'ok', message: 'Tarea eliminada' })
         } catch (error) {
             next(error)
         }
