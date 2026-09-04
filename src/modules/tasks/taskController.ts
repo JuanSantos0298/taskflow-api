@@ -8,7 +8,7 @@ export class TaskController {
     async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const { userId } = req.query
-            const tasks = await TaskModel.find(userId ? { userId } : {})
+            const tasks = await TaskModel.find(userId ? { userId: String(userId) } : {})
             res.json({ status: 'ok', data: tasks })
         } catch (error) {
             next(error)
