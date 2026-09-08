@@ -14,6 +14,10 @@ import { taskRouter } from './modules/tasks/taskRouter.js'
 //Importación del router de autenticación
 import { authRouter } from './modules/auth/authRouter.js'
 
+//Imporrtacion de la configuración de swagger
+import swaggerUi from 'swagger-ui-express'
+import { swaggerSpec } from './config/swagger.js'
+
 //Exportamos la app y una instancia de express
 export const app = express()
 
@@ -26,6 +30,9 @@ app.use('/tasks', taskRouter)
 
 //Uso del router de autenticación en la app
 app.use('/auth', authRouter)
+
+//Uso de swagger en la app
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', message: 'TaskFlow API Running' })
